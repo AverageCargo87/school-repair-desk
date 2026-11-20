@@ -1,0 +1,80 @@
+# Заявки на ремонт. Прод на небольшом VPS рядом с другими сервисами за Traefik.
+# 80/443 держит Traefik из /opt/beget/n8n (сеть n8n_default, certresolver mytlschallenge).
+# Здесь НЕТ Caddy и НЕТ проброса портов наружу: app доступен только через Traefik.
+#
+#   cp .env.example .env   # заполнить DOMAIN и POSTGRES_PASSWORD
+#   docker load < zayavki-app.tar.gz
+#   docker compose up -d
+#
+# Не запускать docker compose в /opt/beget/n8n — это отдельный проект.
+
+name: zayavki
+
+services:
+  app:
+    image: ${APP_IMAGE:-zayavki-app:latest}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-zayavki}:${POSTGRES_PASSWORD:?Задайте POSTGRES_PASSWORD в .env}@db:5432/${POSTGRES_DB:-zayavki}
+      APP_URL: https://${DOMAIN:?Задайте DOMAIN в .env}
+      UPLOAD_DIR: /app/uploads
+      TZ: Europe/Moscow
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+      - n8n_default
+    mem_limit: 320m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=n8n_default
+      - traefik.http.routers.zayavki.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.zayavki.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}
+      - traefik.http.routers.zayavki.tls=true
+      - traefik.http.routers.zayavki.tls.certresolver=mytlschallenge
+      - traefik.http.routers.zayavki.service=zayavki
+      - traefik.http.services.zayavki.loadbalancer.server.port=3000
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-zayavki}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Задайте POSTGRES_PASSWORD в .env}
+      POSTGRES_DB: ${POSTGRES_DB:-zayavki}
+      TZ: Europe/Moscow
+      PGTZ: Europe/Moscow
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    mem_limit: 192m
+    # Скромные настройки под 192 МБ.
+    command: ["postgres", "-c", "shared_buffers=32MB", "-c", "max_connections=20", "-c", "work_mem=2MB"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zayavki} -d ${POSTGRES_DB:-zayavki}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  internal:
+  n8n_default:
+    external: true
+
+volumes:
+  pgdata:
+  uploads:

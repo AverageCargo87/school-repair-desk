@@ -1,0 +1,19 @@
+# Образ из ГОТОВОЙ сборки (Next standalone собирается локально, см. deploy/pack.sh).
+# На сервере сборка образа только копирует файлы — без npm ci и next build.
+FROM node:22-alpine
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0 \
+    TZ=Europe/Moscow \
+    UPLOAD_DIR=/app/uploads
+RUN apk add --no-cache tzdata \
+  && addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+WORKDIR /app
+COPY --chown=nextjs:nodejs app/ ./
+RUN mkdir -p /app/uploads /app/data && chown -R nextjs:nodejs /app/uploads /app/data
+USER nextjs
+EXPOSE 3000
+# Миграции при каждом старте (идемпотентно), затем сервер.
+CMD ["sh", "-c", "node tools/migrate.mjs && exec node server.js"]

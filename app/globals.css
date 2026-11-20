@@ -1,0 +1,381 @@
+@import "tailwindcss";
+
+/*
+ * Дизайн-токены «Заявки · Школа» (см. DESIGN.md).
+ * В компонентах — только классы токенов (bg-surface, text-muted, bg-primary…), никаких hex.
+ * Тёмная тема — по prefers-color-scheme и только для экрана: при печати всегда светлая.
+ */
+:root {
+  /* Основа */
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --surface-2: #f0f2f7;
+  --surface-3: #e7eaf1;
+  --border: #e4e7ee;
+  --border-strong: #d3d8e2;
+  --text: #141a26;
+  --muted: #667085;
+  --subtle: #98a2b3;
+
+  /* Бренд (индиго) */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-fg: #ffffff;
+  --primary-soft: #eef0ff;
+  --primary-soft-hover: #e2e5ff;
+  --primary-soft-fg: #3730a3;
+  --ring: rgb(79 70 229 / 0.28);
+  --logo-from: #4f46e5;
+  --logo-to: #7c3aed;
+
+  /* Смысловые цвета: основной / фон / текст на фоне */
+  --success: #16a34a;
+  --success-bg: #e7f7ee;
+  --success-fg: #15803d;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-bg: #feecec;
+  --danger-fg: #b91c1c;
+  --danger-contrast: #ffffff;
+  --warning: #c2410c;
+  --warning-bg: #fff1e6;
+  --warning-fg: #9a3412;
+  --info: #1d4ed8;
+  --info-bg: #e8f1ff;
+  --info-fg: #1d4ed8;
+  --aqua: #0e7490;
+  --aqua-bg: #e3f6f8;
+  --aqua-fg: #0e7490;
+  --purple: #6d28d9;
+  --purple-bg: #f3eeff;
+  --purple-fg: #6d28d9;
+  --quiet-bg: #f1f2f5;
+  --quiet-fg: #4b5563;
+
+  /* Аватары: спокойная палитра (фон / текст) */
+  --av1-bg: #e0e7ff;
+  --av1-fg: #3730a3;
+  --av2-bg: #e0f2fe;
+  --av2-fg: #075985;
+  --av3-bg: #ccfbf1;
+  --av3-fg: #115e59;
+  --av4-bg: #dcfce7;
+  --av4-fg: #166534;
+  --av5-bg: #fef3c7;
+  --av5-fg: #92400e;
+  --av6-bg: #ffe4e6;
+  --av6-fg: #9f1239;
+  --av7-bg: #ede9fe;
+  --av7-fg: #5b21b6;
+  --av8-bg: #e2e8f0;
+  --av8-fg: #334155;
+
+  /* Тени */
+  --sh-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --sh-raised: 0 6px 16px rgb(16 24 40 / 0.08), 0 1px 3px rgb(16 24 40 / 0.06);
+  --sh-pop: 0 16px 40px rgb(16 24 40 / 0.16), 0 2px 8px rgb(16 24 40 / 0.08);
+  --sh-bar: 0 -1px 0 var(--border), 0 -6px 20px rgb(16 24 40 / 0.06);
+  --sh-brand: 0 1px 2px rgb(79 70 229 / 0.25), 0 4px 12px rgb(79 70 229 / 0.18);
+
+  /* Стрелка у <select> (цвет = --muted). */
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  /* Затемнение под модальными окнами. */
+  --scrim: rgb(13 18 30 / 0.45);
+
+  /* Каркас: высота нижней панели вкладок на телефоне (без safe-area). */
+  --tabbar-h: 64px;
+
+  --app-font: var(--font-onest), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    sans-serif;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0f17;
+    --surface: #121826;
+    --surface-2: #1a2232;
+    --surface-3: #222b3d;
+    --border: #263044;
+    --border-strong: #334059;
+    --text: #e6e9f0;
+    --muted: #94a0b4;
+    --subtle: #6b778c;
+
+    --primary: #8b93ff;
+    --primary-hover: #a3a9ff;
+    --primary-fg: #0b0f17;
+    --primary-soft: rgb(139 147 255 / 0.14);
+    --primary-soft-hover: rgb(139 147 255 / 0.22);
+    --primary-soft-fg: #c7cbff;
+    --ring: rgb(139 147 255 / 0.4);
+    --logo-from: #5b54ec;
+    --logo-to: #8b5cf6;
+
+    --success: #4ade80;
+    --success-bg: rgb(74 222 128 / 0.13);
+    --success-fg: #86efac;
+    --danger: #f87171;
+    --danger-hover: #fca5a5;
+    --danger-bg: rgb(248 113 113 / 0.14);
+    --danger-fg: #fca5a5;
+    --danger-contrast: #1a0b0b;
+    --warning: #fb923c;
+    --warning-bg: rgb(251 146 60 / 0.14);
+    --warning-fg: #fdba74;
+    --info: #93c5fd;
+    --info-bg: rgb(96 165 250 / 0.15);
+    --info-fg: #93c5fd;
+    --aqua: #67e8f9;
+    --aqua-bg: rgb(34 211 238 / 0.13);
+    --aqua-fg: #67e8f9;
+    --purple: #c4b5fd;
+    --purple-bg: rgb(167 139 250 / 0.15);
+    --purple-fg: #c4b5fd;
+    --quiet-bg: rgb(148 160 180 / 0.14);
+    --quiet-fg: #b4bdcc;
+
+    --av1-bg: rgb(129 140 248 / 0.2);
+    --av1-fg: #c7d2fe;
+    --av2-bg: rgb(56 189 248 / 0.18);
+    --av2-fg: #bae6fd;
+    --av3-bg: rgb(45 212 191 / 0.18);
+    --av3-fg: #99f6e4;
+    --av4-bg: rgb(74 222 128 / 0.18);
+    --av4-fg: #bbf7d0;
+    --av5-bg: rgb(251 191 36 / 0.18);
+    --av5-fg: #fde68a;
+    --av6-bg: rgb(251 113 133 / 0.18);
+    --av6-fg: #fecdd3;
+    --av7-bg: rgb(167 139 250 / 0.2);
+    --av7-fg: #ddd6fe;
+    --av8-bg: rgb(148 163 184 / 0.2);
+    --av8-fg: #e2e8f0;
+
+    --sh-card: 0 1px 2px rgb(0 0 0 / 0.2);
+    --sh-raised: 0 6px 16px rgb(0 0 0 / 0.35);
+    --sh-pop: 0 16px 40px rgb(0 0 0 / 0.55), 0 0 0 1px var(--border);
+    --sh-bar: 0 -1px 0 var(--border);
+    --sh-brand: none;
+
+    --scrim: rgb(0 0 0 / 0.6);
+
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a0b4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-hover: var(--primary-soft-hover);
+  --color-primary-soft-fg: var(--primary-soft-fg);
+  /* Старое имя мягкого фона бренда — оставлено для совместимости. */
+  --color-accent-soft: var(--primary-soft);
+  --color-ring: var(--ring);
+  --color-logo-from: var(--logo-from);
+  --color-logo-to: var(--logo-to);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-fg: var(--success-fg);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-contrast: var(--danger-contrast);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-fg: var(--warning-fg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-fg: var(--info-fg);
+  --color-aqua: var(--aqua);
+  --color-aqua-bg: var(--aqua-bg);
+  --color-aqua-fg: var(--aqua-fg);
+  /* Старые имена «progress» = бирюзовый (назначена). */
+  --color-progress-bg: var(--aqua-bg);
+  --color-progress-fg: var(--aqua-fg);
+  --color-purple: var(--purple);
+  --color-purple-bg: var(--purple-bg);
+  --color-purple-fg: var(--purple-fg);
+  --color-quiet-bg: var(--quiet-bg);
+  --color-quiet-fg: var(--quiet-fg);
+
+  --color-av1-bg: var(--av1-bg);
+  --color-av1-fg: var(--av1-fg);
+  --color-av2-bg: var(--av2-bg);
+  --color-av2-fg: var(--av2-fg);
+  --color-av3-bg: var(--av3-bg);
+  --color-av3-fg: var(--av3-fg);
+  --color-av4-bg: var(--av4-bg);
+  --color-av4-fg: var(--av4-fg);
+  --color-av5-bg: var(--av5-bg);
+  --color-av5-fg: var(--av5-fg);
+  --color-av6-bg: var(--av6-bg);
+  --color-av6-fg: var(--av6-fg);
+  --color-av7-bg: var(--av7-bg);
+  --color-av7-fg: var(--av7-fg);
+  --color-av8-bg: var(--av8-bg);
+  --color-av8-fg: var(--av8-fg);
+
+  --color-scrim: var(--scrim);
+
+  --shadow-card: var(--sh-card);
+  --shadow-raised: var(--sh-raised);
+  --shadow-pop: var(--sh-pop);
+  --shadow-bar: var(--sh-bar);
+  --shadow-brand: var(--sh-brand);
+
+  --font-sans: var(--app-font);
+}
+
+@theme {
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-pop-in: pop-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-sheet-up: sheet-up 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+}
+
+/* Безопасные зоны iPhone (вырез, полоска «домой»). */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after,
+  ::backdrop {
+    border-color: var(--border);
+  }
+
+  html {
+    color-scheme: light dark;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--app-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--primary-soft-hover);
+    color: var(--text);
+  }
+
+  /* Видимый фокус с клавиатуры для всего, у чего нет своего кольца. */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* Прокрутка к якорю не уходит под липкую шапку. */
+  html {
+    scroll-padding-top: 72px;
+  }
+}
+
+/* Печать: только содержимое, светлые цвета, без теней. */
+.print-only {
+  display: none;
+}
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000;
+  }
+  *,
+  ::before,
+  ::after {
+    box-shadow: none !important;
+  }
+  .shell-main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}
+
+/* Уважать «уменьшить движение» в настройках телефона. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
